@@ -1,4 +1,3 @@
-
 const KEY="portfolio-v1";
 const seed={
  profile:{name:"Your Name",title:"Your Role",bio:"A short intro about what you do and what you’re into. Click “Edit site” to make this yours.",
@@ -36,7 +35,7 @@ function render(){
  const all=["All",...new Set(S.projects.flatMap(tagsOf))];if(!all.includes(filter))filter="All";
  $("filters").innerHTML=all.length>1?all.map(t=>`<button class="chip ${t===filter?"on":""}" onclick="setF(this.dataset.t)" data-t="${esc(t)}">${esc(t)}</button>`).join(""):"";
  const list=[...S.projects].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).filter(x=>filter==="All"||tagsOf(x).includes(filter));
- $("projs").innerHTML=list.length?list.map(x=>{const u=x.id==="auv"?"projects/auv.html":"#project-"+x.id;const t=`<a href="${u}">${esc(x.title)}</a>`;
+ $("projs").innerHTML=list.length?list.map(x=>{const u=PROJECT_PAGES[x.id]||"#project-"+x.id;const t=`<a href="${u}">${esc(x.title)}</a>`;
   return `<article class="proj" style="cursor:pointer" onclick="if(!event.target.closest('a,button'))location.href='${u}'"><div class="ed"><button class="btn" onclick="editProj('${x.id}')">Edit</button><button class="btn d" onclick="del('projects','${x.id}')">✕</button></div>
   <div class="cv">${x.img?`<img src="${esc(x.img)}" alt="${esc(x.title)}" loading="lazy">`:"Cover image"}</div>
   <div><div class="date">${fmtDate(x.date)}</div><h3>${t}</h3><div class="tags">${tagsOf(x).map(g=>`<span>${esc(g)}</span>`).join("")}</div><p>${esc(x.desc)}</p>${u?`<a class="more" href="${u}">View more →</a>`:""}</div></article>`}).join(""):'<div class="empty">No projects yet. Click “Edit site” to add one.</div>';
@@ -172,6 +171,17 @@ if(S.projectEntriesAdded){
  if(originalAuv&&originalAuv.img==="assets/auv-cover.svg")originalAuv.img="";
  save()
 }
+
+// Projects that have their own page in /projects.
+// To add one: copy projects/project-template.html, add its id + file to PROJECT_PAGES,
+// and add an entry to EXTRA_PROJECTS (it will appear on Home and the Projects page).
+const PROJECT_PAGES={auv:"projects/auv.html","pointview":"projects/pointview.html","bci":"projects/bci.html","laptop-stand":"projects/laptop-stand.html"};
+const EXTRA_PROJECTS=[
+ {"id": "pointview", "title": "PointView", "date": "2025-06-01", "dates": "Summer 2025", "tags": "Computer Vision, YOLOv8", "desc": "An AI-based application that analyzes tennis matches by tracking the players and the ball with YOLOv8.", "body": "Built during the Entrepreneurship Studio Program at Harvey Mudd College as a computer-vision tennis analysis platform using object detection and automated match processing.\nDeveloped PointView, which uses computer vision and machine learning to analyze tennis matches by tracking the players and the ball with YOLOv8.\nTrained a customized YOLOv8 object-detection model for tennis footage, managing the full pipeline from manual data collection and labeling to dataset preparation, model training, and evaluation.\nCombined player detection, ball tracking, and coordinate mapping to transform raw match footage into a birds-eye view of on-court activity.", "img": "", "url": ""},
+ {"id": "bci", "title": "BCI Wireless Data Device", "date": "2026-08-01", "dates": "Aug 2026 – Present", "tags": "ESP32, Embedded Systems, Wireless", "desc": "An industry-sponsored project with Blackrock Neurotech to deliver a wireless data transmission device for a brain-computer interface (BCI).", "body": "Designing and implementing a low power, high data transfer rate wireless device for collecting brain signal data for training purposes.\nProfiling data throughput with different ESP32 microcontrollers to integrate the wireless connection for the data transmission process.", "img": "", "url": ""},
+ {"id": "laptop-stand", "title": "Laptop Stand", "date": "", "dates": "Dates to be added", "tags": "", "desc": "Project details coming soon.", "body": "Add the full project description here.", "img": "", "url": ""}
+];
+EXTRA_PROJECTS.forEach(p=>{if(!S.projects.some(x=>x.id===p.id))S.projects.push(p)});
 
 const _r=render;render=function(){_r();if((location.hash||"").startsWith("#project-"))renderDetail()};
 function route2(){let h=(location.hash||"").slice(1),pg=h;
