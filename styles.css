@@ -85,7 +85,7 @@ nav a.l{font-family:"Caveat",cursive;font-size:22px;font-weight:700}nav a.l:hove
 h1{font-weight:400;letter-spacing:-.01em;line-height:1.08;background:linear-gradient(transparent 62%,var(--chip) 62% 90%,transparent 90%);display:inline;padding:0 6px;margin-left:-6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 #name{display:block;background:none;padding:0;margin-left:0}#name::first-line{background:none}
 .hero>div:first-child{position:relative}
-.hero>div:first-child::after{content:"handmade";position:absolute;top:-34px;right:0;font-family:"Courier Prime",monospace;font-weight:700;color:var(--accent);border:2px dashed var(--accent);padding:2px 10px;transform:rotate(7deg);border-radius:4px;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.hero>div:first-child::after{content: none;}
 .hero p{color:var(--text)}
 .ph{overflow:visible;position:relative;background:var(--pol);border:0;border-radius:3px;padding:14px 14px 56px;transform:rotate(3deg);box-shadow:5px 7px 0 rgba(0,0,0,.2);color:var(--muted)}
 .ph img{border-radius:2px}
