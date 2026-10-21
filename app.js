@@ -30,8 +30,8 @@ function render(){
  
  
  $("aboutTxt").textContent=p.about;$("copy").textContent="© "+new Date().getFullYear()+" "+p.name;
- $("exp").innerHTML=S.exp.length?S.exp.map(e=>`<div class="card"><div class="ed"><button class="btn" onclick="editExp('${e.id}')">Edit</button><button class="btn d" onclick="del('exp','${e.id}')">✕</button></div>
-  <h3>${esc(e.role)}</h3><div class="co">${esc(e.company)}</div><p>${esc(e.sub||e.desc)}</p><small>${esc([e.start,e.end].filter(Boolean).join(" — "))}</small></div>`).join(""):'<div class="empty">No experience yet.</div>';
+ const xi=S.exp.map((e,i)=>`<div class="card c${i%3}"><h3>${esc(e.role)}</h3><div class="co">${esc(e.company)}</div><p>${esc(e.sub||e.desc)}</p><small>${esc([e.start,e.end].filter(Boolean).join(" — "))}</small></div>`).join("");expN=S.exp.length;
+ $("exp").innerHTML=S.exp.length?xi.repeat(Math.max(3,Math.ceil(innerWidth/Math.max(1,S.exp.length*300))+2)):'<div class="empty">No experience yet.</div>';
  const all=["All",...new Set(S.projects.flatMap(tagsOf))];if(!all.includes(filter))filter="All";
  $("filters").innerHTML=all.length>1?all.map(t=>`<button class="chip ${t===filter?"on":""}" onclick="setF(this.dataset.t)" data-t="${esc(t)}">${esc(t)}</button>`).join(""):"";
  const list=[...S.projects].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).filter(x=>filter==="All"||tagsOf(x).includes(filter));
@@ -40,11 +40,15 @@ function render(){
   <div class="cv">${x.img?`<img src="${esc(x.img)}" alt="${esc(x.title)}" loading="lazy">`:"Cover image"}</div>
   <div><div class="date">${fmtDate(x.date)}</div><h3>${t}</h3><div class="tags">${tagsOf(x).map(g=>`<span>${esc(g)}</span>`).join("")}</div><p>${esc(x.desc)}</p>${u?`<a class="more" href="${u}">View more →</a>`:""}</div></article>`}).join(""):'<div class="empty">No projects yet. Click “Edit site” to add one.</div>';
 }
-function updProg(){const c=$("projs"),m=c.scrollWidth-c.clientWidth;$("bar").style.transform="scaleX("+(m>0?c.scrollLeft/m:1)+")"}
-function nudge(d){const c=$("projs");waitUntil=performance.now()+2500;c.scrollBy({left:d*c.clientWidth*.8,behavior:"smooth"})}
-// auto-scroll: slow continuous drift, pauses on hover/touch/focus/edit mode, loops at the end
+let expN=0;
+function cycW(){const c=$("exp");return expN>0&&c.children.length>expN?c.children[expN].offsetLeft-c.children[0].offsetLeft:0}
+function wrapExp(){const c=$("exp"),W=cycW();if(W<=0)return;const s=c.scrollLeft;if(s>=2*W||s<W){const n=((s-W)%W+W)%W+W;c.scrollLeft=n;pos=n}}
+function initExp(){const W=cycW();if(W>0){$("exp").scrollLeft=W;pos=W}}
+function updProg(){const W=cycW();$("bar").style.transform="scaleX("+(W>0?((($("exp").scrollLeft-W)%W+W)%W)/W:1)+")"}
+function nudge(d){const c=$("exp");waitUntil=performance.now()+2500;c.scrollBy({left:d*c.clientWidth*.8,behavior:"smooth"})}
+// auto-scroll: slow, endless drift (the notes repeat); pauses on hover/touch/focus
 let auto=!matchMedia("(prefers-reduced-motion:reduce)").matches,hover=false,touch=false,pos=0,last=0,waitUntil=0;
-const pj=$("projs");
+const pj=$("exp");
 function togglePlay(){auto=!auto;$("play").textContent=auto?"\u275a\u275a":"\u25b6";pj.classList.toggle("playing",auto)}
 pj.classList.toggle("playing",auto);$("play").textContent=auto?"\u275a\u275a":"\u25b6";
 pj.addEventListener("mouseenter",()=>hover=true);pj.addEventListener("mouseleave",()=>hover=false);
@@ -52,16 +56,14 @@ pj.addEventListener("focusin",()=>hover=true);pj.addEventListener("focusout",()=
 pj.addEventListener("touchstart",()=>touch=true,{passive:true});pj.addEventListener("touchend",()=>setTimeout(()=>touch=false,2500));
 function tick(t){
  const dt=Math.min(t-last,50);last=t;
- const m=pj.scrollWidth-pj.clientWidth;
- if(!auto||hover||touch||editing||document.hidden||m<=0||t<waitUntil){pos=pj.scrollLeft}
- else{pos+=dt*0.04;
-  if(pos>=m){pos=m;pj.scrollLeft=m;waitUntil=t+1500;setTimeout(()=>{pos=0;pj.scrollLeft=0},1500)}
-  else pj.scrollLeft=pos}
+ const W=cycW();
+ if(!auto||hover||touch||document.hidden||W<=0||t<waitUntil){pos=pj.scrollLeft}
+ else{pos+=dt*0.04;if(pos>=2*W)pos-=W;pj.scrollLeft=pos}
  requestAnimationFrame(tick)}
 requestAnimationFrame(tick);
-$("projs").addEventListener("scroll",updProg,{passive:true});
+$("exp").addEventListener("scroll",()=>{wrapExp();updProg()},{passive:true});
 addEventListener("resize",updProg);
-new MutationObserver(updProg).observe($("projs"),{childList:true});
+new MutationObserver(()=>{initExp();updProg()}).observe($("exp"),{childList:true});
 function setF(t){filter=t;$("projs").scrollLeft=0;render()}
 function del(k,id){if(confirm("Delete this item?")){S[k]=S[k].filter(x=>x.id!==id);save();render()}}
 
