@@ -4,13 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PointView | Rebecca Kong</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@500;700;800&family=Patrick+Hand&display=swap">
   <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
   <header>
     <div class="wrap">
       <nav>
-        <a class="logo" href="../index.html#home"><i>Y</i> Rebecca Kong</a>
+        <a class="logo" href="../index.html#home"><i>R</i> Rebecca Kong</a>
         <a class="l" href="../index.html#home">Home</a>
         <a class="l" href="../index.html#resume">Resume</a>
         <a class="l on" href="../index.html#projects">Projects</a>
@@ -19,20 +20,46 @@
     </div>
   </header>
   <main class="wrap">
-    <section class="view on">
+    <section class="view on ppage">
       <p><a class="more" href="../index.html#projects">← All projects</a></p>
-      <div class="dcv">Cover image</div>
       <p class="date">Summer 2025</p>
       <h1>PointView</h1>
-      <div class="tags"><span>Computer Vision</span><span>YOLOv8</span></div>
-      <p class="lead">An AI-based application that analyzes tennis matches by tracking the players and the ball with YOLOv8.</p>
-      <div class="dbody">Built during the Entrepreneurship Studio Program at Harvey Mudd College as a computer-vision tennis analysis platform using object detection and automated match processing.
-Developed PointView, which uses computer vision and machine learning to analyze tennis matches by tracking the players and the ball with YOLOv8.
-Trained a customized YOLOv8 object-detection model for tennis footage, managing the full pipeline from manual data collection and labeling to dataset preparation, model training, and evaluation.
-Combined player detection, ball tracking, and coordinate mapping to transform raw match footage into a birds-eye view of on-court activity.</div>
-      <div class="dact">
-        <a class="btn" href="../index.html#projects">Back to projects</a>
-      </div>
+      <div class="tags"><span>Computer Vision</span><span>YOLOv8</span><span>GridTrackNet</span><span>React</span></div>
+      <p class="lead">A website that automatically trims tennis match recordings, provides point statistics and lets players take notes.</p>
+<figure class="pfig "><img src="../assets/pointview/pv-notes.jpg" alt="The PointView match page: video alongside editable notes." loading="lazy"><figcaption>The PointView match page: video alongside editable notes.</figcaption></figure>
+<p>PointView makes tennis self-analysis faster and cheaper. It is a website that automatically trims match recordings down to the points actually played, gives point statistics, and lets players take notes next to their video. The project was built over the summer in the Entrepreneurship Studio Program at Harvey Mudd College with teammates Emily Ing and Bell Zhou, advised by Coach Caitlin Bernard and Professor Zach Dodds.</p>
+<p>Under the hood it combines a fine-tuned YOLOv8 model for players, GridTrackNet for the ball, an auto-trimming algorithm that decides when a point starts and ends, and a homography that maps what the camera sees onto a top-down “minicourt.”</p>
+      </section>
+      <section class="psec"><h2 class="sec">Website features</h2>
+<p>Users upload a match with a title, match type and notes, then browse their matches sorted by date, type and title. Each match page shows the video next to a rich-text notes editor.</p><div class="pgrid"><figure class="pfig "><img src="../assets/pointview/pv-upload.jpg" alt="Uploading a match with a note." loading="lazy"><figcaption>Uploading a match with a note.</figcaption></figure><figure class="pfig "><img src="../assets/pointview/pv-matches.jpg" alt="The list of uploaded matches, sortable by date, match type and title." loading="lazy"><figcaption>The list of uploaded matches, sortable by date, match type and title.</figcaption></figure></div>
+      </section>
+      <section class="psec"><h2 class="sec">Player and ball detection</h2>
+<p>Players are detected with a fine-tuned YOLOv8 model and given IDs, so only the people playing the current match are tracked and not line judges or ball kids. The ball is tracked with GridTrackNet.</p><figure class="pfig "><img src="../assets/pointview/pv-detection.jpg" alt="Detections on a match frame: the players and the ball are marked." loading="lazy"><figcaption>Detections on a match frame: the players and the ball are marked.</figcaption></figure><table class="ptable"><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th></tr>
+<tr><td>Ball (GridTrackNet)</td><td>0.913</td><td>0.966</td><td>0.939</td><td>0.953</td></tr>
+<tr><td>Players (YOLOv8)</td><td>0.996</td><td>0.992</td><td>1</td><td>0.996</td></tr></table>
+      </section>
+      <section class="psec"><h2 class="sec">Auto-trimming</h2>
+<p>A rule-based algorithm watches the players’ positions, the serving position and the ball. A point starts when the players are in position and ends when the ball or players are missing for 50 consecutive frames, so downtime between points is cut. In one example a 2 minute 22 second recording of a game became 1 minute 12 seconds of play.</p>
+      </section>
+      <section class="psec"><h2 class="sec">Mapping to a birds-eye view</h2>
+<p>The user labels keypoints on the court in the video. Those are matched to preset points on a minicourt to compute a homography matrix, which is then applied to the player and ball detections to place them on the minicourt. The ball’s path is interpolated between bounces.</p><div class="pgrid"><figure class="pfig "><img src="../assets/pointview/pv-keypoints.jpg" alt="Court keypoints labeled on the video." loading="lazy"><figcaption>Court keypoints labeled on the video.</figcaption></figure><figure class="pfig "><img src="../assets/pointview/pv-minicourt.jpg" alt="Players and ball mapped onto the minicourt." loading="lazy"><figcaption>Players and ball mapped onto the minicourt.</figcaption></figure></div>
+      </section>
+      <section class="psec"><h2 class="sec">My contributions</h2>
+<ul>
+<li><b>Training:</b> trained the customized YOLOv8 object-detection model for tennis footage, covering manual data collection and labeling, dataset preparation, training and evaluation.</li>
+<li><b>Mapping:</b> implemented the keypoint-to-minicourt mapping that combines player detection, ball tracking and coordinate mapping to turn raw match footage into a birds-eye view.</li>
+</ul>
+<div class="plinks"><a class="btn p" href="https://github.com/rlxkong/Tennis-Mapping-PointView" target="_blank" rel="noopener">View the mapping code on GitHub ↗</a></div>
+      </section>
+      <section class="psec"><h2 class="sec">The entrepreneurship process</h2>
+<!-- Rebecca: replace or expand this section with your own story of building PointView. -->
+<p>The Entrepreneurship Studio Program treated the summer as a startup: build something real, then keep pitching it. Over the weeks the team pitched PointView to a series of visitors and mentors, including an intellectual-property attorney, and showed it at the campus-wide demo day. Along the way the team also explored a subscription model with tiered plans.</p>
+<p><em>More about how PointView was created and what I learned is coming soon.</em></p>
+      </section>
+      <section class="psec"><h2 class="sec">Conclusion and future work</h2>
+<p>PointView runs reasonably accurately on high-quality footage. GridTrackNet’s ball detection depends on footage quality, which limits how well PointView can track the ball and generate stats from everyday recordings. Future work is a better algorithm for interpolating the ball path, or a higher baseline camera quality, while keeping PointView accessible.</p>
+      </section>
+      <div class="dact"><a class="btn" href="../index.html#projects">Back to projects</a></div>
     </section>
   </main>
   <footer class="wrap"><span>Rebecca Kong</span><a href="../index.html#about">Contact me</a></footer>

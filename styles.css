@@ -1,3 +1,4 @@
+
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 --bg:#fafaf8;--surface:#fff;--text:#15171a;--muted:#6b7077;--line:#e6e6e1;--accent:#2f6fed;--chip:#eef1f6}
 html{scroll-padding-top:calc(70px + env(safe-area-inset-top,0px));scroll-behavior:smooth}
@@ -211,3 +212,22 @@ body:not(.sub) #projs .proj{flex:none}
 body:not(.sub) #projs{grid-template-columns:repeat(2,minmax(0,1fr))}
 body[data-page="projects"] .proj{flex:0 1 calc(50% - 14px);max-width:520px}
 @media(max-width:700px){body:not(.sub) #projs{grid-template-columns:1fr}body[data-page="projects"] .proj{flex:0 1 100%}}
+/* no squiggly underlines */
+.more,#mail{text-decoration:none}
+/* ===== project pages ===== */
+.ppage{max-width:860px}
+.ppage h1{font:600 clamp(32px,6vw,48px)/1.1 "Fredoka",sans-serif;margin:6px 0 12px}
+.psec{margin:48px 0 0}.psec h2.sec{font-size:24px;margin-bottom:16px}
+.psec p,.psec li{font-size:17px;line-height:1.7}.psec ul{padding-left:22px}.psec li{margin:6px 0}
+.pfacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin:26px 0}
+.pfacts div{background:var(--n1);padding:16px;border-radius:2px;box-shadow:3px 5px 0 rgba(0,0,0,.14);transform:rotate(-1deg)}
+.pfacts div:nth-child(3n+2){background:var(--n2);transform:rotate(1deg)}.pfacts div:nth-child(3n){background:var(--n3)}
+.pfacts b{display:block;font:600 26px/1.15 "Fredoka",sans-serif}.pfacts span{font-size:14px;color:var(--muted)}
+.pfig{margin:24px 0;background:var(--pol);padding:12px 12px 14px;border-radius:3px;box-shadow:4px 6px 0 rgba(120,100,160,.18)}
+.pfig img{width:100%;display:block;border-radius:2px}
+.pfig figcaption{font-size:14.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+.pfig.narrow{max-width:420px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;margin:24px 0}.pgrid .pfig{margin:0}
+.ptable{border-collapse:collapse;width:100%;max-width:620px;font-size:15.5px;margin:18px 0}
+.ptable th,.ptable td{border:2px solid var(--edge);padding:8px 12px;text-align:left}.ptable th{background:var(--n1)}
+.plinks{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}
