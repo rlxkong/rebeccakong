@@ -205,6 +205,9 @@ body:not(.sub) .cwrap{display:none}
 #exp .card{flex:0 0 min(300px,80vw);scroll-snap-align:start}
 body:not(.sub) #projs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:38px 28px;overflow:visible;scroll-snap-type:none;padding:26px 8px 12px}
 body:not(.sub) #projs .proj{flex:none}
-#exp .card.c0{background:var(--n1);transform:rotate(-1.4deg)}
-#exp .card.c1{background:var(--n2);transform:rotate(1.6deg)}
-#exp .card.c2{background:var(--n3);transform:rotate(-.6deg)}
+/* icon links + two projects per row */
+.links .btn.ico{width:46px;height:46px;padding:0;display:grid;place-items:center;border-radius:50%}
+.links .btn.ico svg{display:block}
+body:not(.sub) #projs{grid-template-columns:repeat(2,minmax(0,1fr))}
+body[data-page="projects"] .proj{flex:0 1 calc(50% - 14px);max-width:520px}
+@media(max-width:700px){body:not(.sub) #projs{grid-template-columns:1fr}body[data-page="projects"] .proj{flex:0 1 100%}}

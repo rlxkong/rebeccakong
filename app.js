@@ -21,17 +21,18 @@ const safeUrl=u=>/^(https?:|mailto:)/i.test(u||"")?u:"";
 const fmtDate=d=>{const t=new Date(d+"T00:00");return isNaN(t)?esc(d):t.toLocaleDateString("en-US",{day:"2-digit",month:"short",year:"numeric"})};
 const tagsOf=p=>(p.tags||"").split(",").map(t=>t.trim()).filter(Boolean);
 
+// Icon links shown on the home page. Edit the URLs here.
+const SOCIAL=[{label:"LinkedIn",url:"https://www.linkedin.com/in/rebecca-kong-b35383304",svg:'<path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>'},{label:"GitHub",url:"https://github.com/rebeccakong",svg:'<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>'}];
 function render(){
  const p=S.profile;document.title=p.name+" – Portfolio";
  $("navName").textContent=p.name;$("mono").textContent=(p.name||"?").trim()[0]||"?";
  $("name").textContent=p.name;$("title").textContent=p.title;$("bio").textContent=p.bio;
  $("photo").innerHTML=p.photo?`<img src="${esc(p.photo)}" alt="${esc(p.name)}">`:"Add a photo";
- $("links").innerHTML=(p.links||[]).map(l=>`<a class="btn" href="${esc(safeUrl(l.url))}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("");
+ $("links").innerHTML=SOCIAL.map(l=>`<a class="btn ico" href="${l.url}" target="_blank" rel="noopener" aria-label="${l.label}" title="${l.label}"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">${l.svg}</svg></a>`).join("");
  
  
  $("aboutTxt").textContent=p.about;$("copy").textContent="© "+new Date().getFullYear()+" "+p.name;
- const xi=S.exp.map((e,i)=>`<div class="card c${i%3}"><h3>${esc(e.role)}</h3><div class="co">${esc(e.company)}</div><p>${esc(e.sub||e.desc)}</p><small>${esc([e.start,e.end].filter(Boolean).join(" — "))}</small></div>`).join("");expN=S.exp.length;
- $("exp").innerHTML=S.exp.length?xi.repeat(Math.max(3,Math.ceil(innerWidth/Math.max(1,S.exp.length*300))+2)):'<div class="empty">No experience yet.</div>';
+ $("exp").innerHTML=S.exp.length?S.exp.map(e=>`<div class="card"><h3>${esc(e.role)}</h3><div class="co">${esc(e.company)}</div><p>${esc(e.sub||e.desc)}</p><small>${esc([e.start,e.end].filter(Boolean).join(" — "))}</small></div>`).join(""):'<div class="empty">No experience yet.</div>';
  const all=["All",...new Set(S.projects.flatMap(tagsOf))];if(!all.includes(filter))filter="All";
  $("filters").innerHTML=all.length>1?all.map(t=>`<button class="chip ${t===filter?"on":""}" onclick="setF(this.dataset.t)" data-t="${esc(t)}">${esc(t)}</button>`).join(""):"";
  const list=[...S.projects].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).filter(x=>filter==="All"||tagsOf(x).includes(filter));
@@ -40,13 +41,9 @@ function render(){
   <div class="cv">${x.img?`<img src="${esc(x.img)}" alt="${esc(x.title)}" loading="lazy">`:"Cover image"}</div>
   <div><div class="date">${fmtDate(x.date)}</div><h3>${t}</h3><div class="tags">${tagsOf(x).map(g=>`<span>${esc(g)}</span>`).join("")}</div><p>${esc(x.desc)}</p>${u?`<a class="more" href="${u}">View more →</a>`:""}</div></article>`}).join(""):'<div class="empty">No projects yet. Click “Edit site” to add one.</div>';
 }
-let expN=0;
-function cycW(){const c=$("exp");return expN>0&&c.children.length>expN?c.children[expN].offsetLeft-c.children[0].offsetLeft:0}
-function wrapExp(){const c=$("exp"),W=cycW();if(W<=0)return;const s=c.scrollLeft;if(s>=2*W||s<W){const n=((s-W)%W+W)%W+W;c.scrollLeft=n;pos=n}}
-function initExp(){const W=cycW();if(W>0){$("exp").scrollLeft=W;pos=W}}
-function updProg(){const W=cycW();$("bar").style.transform="scaleX("+(W>0?((($("exp").scrollLeft-W)%W+W)%W)/W:1)+")"}
+function updProg(){const c=$("exp"),m=c.scrollWidth-c.clientWidth;$("bar").style.transform="scaleX("+(m>0?c.scrollLeft/m:1)+")"}
 function nudge(d){const c=$("exp");waitUntil=performance.now()+2500;c.scrollBy({left:d*c.clientWidth*.8,behavior:"smooth"})}
-// auto-scroll: slow, endless drift (the notes repeat); pauses on hover/touch/focus
+// auto-scroll: slow continuous drift, pauses on hover/touch/focus/edit mode, loops at the end
 let auto=!matchMedia("(prefers-reduced-motion:reduce)").matches,hover=false,touch=false,pos=0,last=0,waitUntil=0;
 const pj=$("exp");
 function togglePlay(){auto=!auto;$("play").textContent=auto?"\u275a\u275a":"\u25b6";pj.classList.toggle("playing",auto)}
@@ -56,14 +53,16 @@ pj.addEventListener("focusin",()=>hover=true);pj.addEventListener("focusout",()=
 pj.addEventListener("touchstart",()=>touch=true,{passive:true});pj.addEventListener("touchend",()=>setTimeout(()=>touch=false,2500));
 function tick(t){
  const dt=Math.min(t-last,50);last=t;
- const W=cycW();
- if(!auto||hover||touch||document.hidden||W<=0||t<waitUntil){pos=pj.scrollLeft}
- else{pos+=dt*0.04;if(pos>=2*W)pos-=W;pj.scrollLeft=pos}
+ const m=pj.scrollWidth-pj.clientWidth;
+ if(!auto||hover||touch||editing||document.hidden||m<=0||t<waitUntil){pos=pj.scrollLeft}
+ else{pos+=dt*0.04;
+  if(pos>=m){pos=m;pj.scrollLeft=m;waitUntil=t+1500;setTimeout(()=>{pos=0;pj.scrollLeft=0},1500)}
+  else pj.scrollLeft=pos}
  requestAnimationFrame(tick)}
 requestAnimationFrame(tick);
-$("exp").addEventListener("scroll",()=>{wrapExp();updProg()},{passive:true});
+$("exp").addEventListener("scroll",updProg,{passive:true});
 addEventListener("resize",updProg);
-new MutationObserver(()=>{initExp();updProg()}).observe($("exp"),{childList:true});
+new MutationObserver(updProg).observe($("exp"),{childList:true});
 function setF(t){filter=t;$("projs").scrollLeft=0;render()}
 function del(k,id){if(confirm("Delete this item?")){S[k]=S[k].filter(x=>x.id!==id);save();render()}}
 
