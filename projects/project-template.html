@@ -4,26 +4,59 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Project title | Rebecca Kong</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@500;700;800&family=Patrick+Hand&display=swap">
   <link rel="stylesheet" href="../styles.css">
 </head>
-<body>
-  <!-- Copy this file for a new project and update the title, date, tags, and description. -->
-  <header><div class="wrap"><nav>
-    <a class="logo" href="../index.html#home"><i>Y</i> Rebecca Kong</a>
-    <a class="l" href="../index.html#home">Home</a>
-    <a class="l" href="../index.html#resume">Resume</a>
-    <a class="l on" href="../index.html#projects">Projects</a>
-    <a class="l" href="../index.html#about">About</a>
-  </nav></div></header>
-  <main class="wrap"><section class="view on">
-    <p><a class="more" href="../index.html#projects">← All projects</a></p>
-    <div class="dcv">Cover image</div>
-    <p class="date">Project dates</p>
-    <h1>Project title</h1>
-    <div class="tags"><span>Technology</span></div>
-    <p class="lead">Short project summary.</p>
-    <div class="dbody">Add the full project description here.</div>
-  </section></main>
+<body class="postpage">
+  <!-- Copy this file for a new project. Update the title, dates, cover image, text and tags. -->
+  <header>
+    <div class="wrap">
+      <nav>
+        <a class="logo" href="../index.html#home"><i>R</i> Rebecca Kong</a>
+        <a class="l" href="../index.html#home">Home</a>
+        <a class="l" href="../index.html#resume">Resume</a>
+        <a class="l on" href="../index.html#projects">Projects</a>
+        <a class="l" href="../index.html#about">About</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <article class="article">
+      <p class="backlink"><a class="more" href="../index.html#projects">← All projects</a></p>
+      <h1>Project title</h1>
+      <p class="byline">Rebecca Kong<span>·</span>Project dates<span>·</span>5 min read</p>
+      <figure class="pcover"><img src="../assets/covers/your-cover.jpg" alt="Describe the cover image"></figure>
+      <div class="pbody">
+        <p>A short introduction: what the project is and why you built it.</p>
+
+        <h2>Section heading</h2><hr>
+        <p>Write the story here. Use a heading like the one above for each major section.</p>
+        <h3>Sub-section heading</h3>
+        <p>More detail.</p>
+
+        <figure><img src="../assets/your-folder/your-image.jpg" alt="Caption" loading="lazy"><figcaption>Caption in italics under the image.</figcaption></figure>
+
+        <!-- Two images side by side: -->
+        <div class="pair">
+          <figure><img src="../assets/your-folder/left.jpg" alt="Left caption" loading="lazy"><figcaption>Left caption.</figcaption></figure>
+          <figure><img src="../assets/your-folder/right.jpg" alt="Right caption" loading="lazy"><figcaption>Right caption.</figcaption></figure>
+        </div>
+      </div>
+      <div class="tags ptags"><span>Tag one</span><span>Tag two</span></div>
+      <div class="pshare"><span>Share</span><button type="button" class="btn" id="shCopy">Copy link</button><a class="btn" id="shLi" target="_blank" rel="noopener" href="#">LinkedIn</a><a class="btn" id="shMail" href="#">Email</a></div>
+    </article>
+  </main>
   <footer class="wrap"><span>Rebecca Kong</span><a href="../index.html#about">Contact me</a></footer>
+<script>
+(function(){
+  var u=location.href,t=document.title,$=function(i){return document.getElementById(i)};
+  $("shLi").href="https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(u);
+  $("shMail").href="mailto:?subject="+encodeURIComponent(t)+"&body="+encodeURIComponent(u);
+  $("shCopy").onclick=function(){var b=this;
+    function ok(){b.textContent="Copied!";setTimeout(function(){b.textContent="Copy link"},1800)}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(ok,function(){prompt("Copy this link:",u)})}
+    else{prompt("Copy this link:",u)}};
+})();
+</script>
 </body>
 </html>

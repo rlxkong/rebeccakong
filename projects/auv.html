@@ -4,10 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Autonomous Underwater Vehicle | Rebecca Kong</title>
+  <meta name="description" content="An underwater robot that measures depth, temperature and magnetic flux to locate ferromagnetic objects on the ocean floor.">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@500;700;800&family=Patrick+Hand&display=swap">
   <link rel="stylesheet" href="../styles.css">
 </head>
-<body>
+<body class="postpage">
   <header>
     <div class="wrap">
       <nav>
@@ -20,58 +21,83 @@
     </div>
   </header>
   <main class="wrap">
-    <section class="view on ppage">
-      <p><a class="more" href="../index.html#projects">← All projects</a></p>
-      <p class="date">Aug 2025 – May 2026</p>
+    <article class="article">
+      <p class="backlink"><a class="more" href="../index.html#projects">← All projects</a></p>
       <h1>Autonomous Underwater Vehicle</h1>
-      <div class="tags"><span>Arduino</span><span>MATLAB</span><span>Sensors</span></div>
-      <p class="lead">An underwater robot that measures depth, temperature and magnetic flux to locate ferromagnetic objects on the ocean floor.</p>
-<figure class="pfig "><img src="../assets/auv/auv-sketch.jpg" alt="Sketch of the rectangular AUV showing sensor, motor and electronics placement." loading="lazy"><figcaption>Sketch of the rectangular AUV showing sensor, motor and electronics placement.</figcaption></figure>
+      <p class="byline">Rebecca Kong<span>·</span>Aug 2025 – May 2026<span>·</span>5 min read</p>
+      <figure class="pcover"><img src="../assets/covers/auv-cover.jpg" alt="Sketch of the rectangular AUV showing sensor, motor and electronics placement."></figure>
+      <div class="pbody">
 <p>This autonomous underwater vehicle (AUV) was the final project for Experimental Engineering at Harvey Mudd College. The goal was to find metal debris on the ocean floor, which is expensive to locate and remove and can contaminate the ecosystem with heavy metals, and to track where currents might carry it.</p>
-<p>The robot carries three sensors: a thermistor for temperature, a pressure sensor for depth, and a magnetometer for magnetic flux density. Magnetic readings plotted against GPS position produce a contour map where peaks mark ferromagnetic objects. Temperature and pressure give the density differences needed to estimate geostrophic flow.</p>
-      </section>
-      <section class="psec"><h2 class="sec">Sensors and circuits</h2>
-<ul>
-<li><b>Magnetometer (RM3100):</b> chosen for picking up weak fields with manageable noise. It runs from a 3.3 V regulator and talks to the Teensy over three wires. A 10-minute calibration away from interference settled around 50.4 μT, which matched the expected value for Earth’s field.</li>
-<li><b>Pressure sensor (MPX5700):</b> depth from 0 m to 3 m gives only a 0.19 V swing, so an op-amp offset amplifier (gain of about 14.3) scales it up to the range the Teensy can read. A pressure-tube calibration gave a linear fit between voltage and depth.</li>
-<li><b>Thermistor:</b> a voltage divider plus a second offset amplifier (gain of about 3) covers an expected 10–25 °C ocean range, calibrated by fitting the Steinhart-Hart equation in MATLAB.</li>
-</ul>
-<div class="pgrid"><figure class="pfig "><img src="../assets/auv/auv-pressure-circuit.jpg" alt="Schematic of the MPX5700 pressure sensor feeding into the Teensy." loading="lazy"><figcaption>Schematic of the MPX5700 pressure sensor feeding into the Teensy.</figcaption></figure><figure class="pfig "><img src="../assets/auv/auv-pressure-calibration.jpg" alt="Calibration curve relating pressure sensor voltage to depth." loading="lazy"><figcaption>Calibration curve relating pressure sensor voltage to depth.</figcaption></figure></div>
-      </section>
-      <section class="psec"><h2 class="sec">Robot design</h2>
+<p>The robot carries three sensors: a thermistor for temperature, a pressure sensor for depth, and a magnetometer for magnetic flux density. Magnetic readings plotted against GPS position produce a contour map where peaks mark ferromagnetic objects. Temperature and pressure give the density differences needed to estimate geostrophic flow, the large-scale ocean currents that could show where the debris came from.</p>
+
+<h2>Sensor Design</h2><hr>
+<p>Each sensor needed its own circuit to turn what it measures into a voltage range the Teensy microcontroller can read.</p>
+<h3>Magnetometer</h3>
+<p>The magnetometer is an RM3100, chosen because it picks up weak fields while keeping noise manageable. It runs from a 3.3 V regulator and talks to the Teensy over three wires. To calibrate it, it was left still for 10 minutes outside, away from magnetic interference. The readings settled around 50.4 μT, which matched the expected value for Earth’s field.</p>
+<h3>Pressure Sensor</h3>
+<p>The MPX5700 pressure sensor measures depth. Over the expected 0 m to 3 m dive range its output only changes by about 0.19 V, so an op-amp offset amplifier with a gain of about 14.3 scales that swing up to the range the Teensy can read. It was calibrated in a pressure tube, which gave a linear fit between voltage and depth.</p>
+<div class="pair"><figure><img src="../assets/auv/auv-pressure-circuit.jpg" alt="Schematic of the MPX5700 pressure sensor feeding into the Teensy." loading="lazy"><figcaption>Schematic of the MPX5700 pressure sensor feeding into the Teensy.</figcaption></figure><figure><img src="../assets/auv/auv-pressure-calibration.jpg" alt="Calibration curve relating pressure sensor voltage to depth." loading="lazy"><figcaption>Calibration curve relating pressure sensor voltage to depth.</figcaption></figure></div>
+<h3>Thermistor</h3>
+<p>The thermistor uses a voltage divider followed by a second offset amplifier, with a gain of about 3, to cover an expected ocean range of 10–25 °C. It was calibrated by fitting the Steinhart-Hart equation to measured resistances in MATLAB.</p>
+
+<h2>Robot Design</h2><hr>
 <p>The frame is 35.5 × 35.5 × 63.5 cm. The magnetometer sits at the very bottom, as close to the floor as possible and far from the ballast, while most of the ballast and all the main electronics live in a box at the top, which is also the part that breaks the surface for GPS. Four motors drive it: two pointing up and down for diving, and two on opposite sides for steering on the surface.</p>
 <p>The robot was balanced to be nearly neutrally buoyant, so it needed very little thrust to dive. Its center of mass sits above its center of buoyancy, but because the center of mass is below the metacenter the design stays stable when it tilts.</p>
-      </section>
-      <section class="psec"><h2 class="sec">Deployment</h2>
-<p>The AUV was deployed from the pier at Dana Point. Surface steering turned out to be unreliable because yaw calculations only worked in one orientation, and GPS resolution was too coarse for a grid pattern, so positions were recorded by dropping the robot at marked spots along the pier and logging each one with a phone’s GPS. In the water, a P-controller held the robot at depth steps of 0.5 m while data was logged to an SD card.</p><div class="pgrid"><figure class="pfig "><img src="../assets/auv/auv-dana-point.jpg" alt="Deployment spots along the pier at Dana Point." loading="lazy"><figcaption>Deployment spots along the pier at Dana Point.</figcaption></figure><figure class="pfig "><img src="../assets/auv/auv-depth.jpg" alt="Depth readings from the 12th run, holding the expected 0.5 m steps." loading="lazy"><figcaption>Depth readings from the 12th run, holding the expected 0.5 m steps.</figcaption></figure></div>
-      </section>
-      <section class="psec"><h2 class="sec">Results</h2>
+
+<h2>Deployment</h2><hr>
+<p>The AUV was deployed from the pier at Dana Point. Surface steering turned out to be unreliable because yaw calculations only worked in one orientation, and GPS resolution was too coarse for a grid pattern, so positions were recorded by dropping the robot at marked spots along the pier and logging each one with a phone’s GPS. In the water, a P-controller held the robot at depth steps of 0.5 m while data was logged to an SD card.</p>
+<div class="pair"><figure><img src="../assets/auv/auv-dana-point.jpg" alt="Deployment spots along the pier at Dana Point." loading="lazy"><figcaption>Deployment spots along the pier at Dana Point.</figcaption></figure><figure><img src="../assets/auv/auv-depth.jpg" alt="Depth readings from the 12th run, holding the expected 0.5 m steps." loading="lazy"><figcaption>Depth readings from the 12th run, holding the expected 0.5 m steps.</figcaption></figure></div>
+
+<h2>Results</h2><hr>
 <p>The pressure sensor was the most reliable: in every trial the robot stopped at the expected depth increments and stayed within 0 to 3 m. The other two sensors ran into trouble in the water.</p>
-<ul>
-<li><b>Thermistor:</b> readings railed out near 28 °C while a digital thermometer measured 18.7 °C at the surface. Testing narrowed the cause to a likely short along the sensor wire, so the temperature data was not usable.</li>
-<li><b>Magnetometer:</b> it read well in air and in fresh water, but in salt water the readings spiked and then flatlined. The leading hypothesis is that electromagnetic interference was amplified underwater.</li>
-</ul><div class="pgrid"><figure class="pfig "><img src="../assets/auv/auv-temperature.jpg" alt="Temperature readings railing out at about 28.05 °C." loading="lazy"><figcaption>Temperature readings railing out at about 28.05 °C.</figcaption></figure><figure class="pfig "><img src="../assets/auv/auv-land-path.jpg" alt="Path of the robot for the land trial used to test the method." loading="lazy"><figcaption>Path of the robot for the land trial used to test the method.</figcaption></figure></div>
-      </section>
-      <section class="psec"><h2 class="sec">Testing the method on land</h2>
-<p>To check that the approach itself works, magnets were scattered on the floor and the robot was carried over the area in a grid pattern. The resulting contour map shows a clear peak where a magnet sits, with baseline readings near 50.4 μT and peaks from about 85 μT up to 180 μT. It picked up one of the four magnets, so the method is feasible but needs better detection.</p><figure class="pfig "><img src="../assets/auv/auv-contour.jpg" alt="Contour plot of magnetic flux density against position. White points mark where data was collected; the rest is interpolated." loading="lazy"><figcaption>Contour plot of magnetic flux density against position. White points mark where data was collected; the rest is interpolated.</figcaption></figure>
-      </section>
-      <section class="psec"><h2 class="sec">What I would do next</h2>
+<h3>The Thermistor</h3>
+<p>Its readings railed out near 28 °C while a digital thermometer measured 18.7 °C at the surface. Testing narrowed the cause to a likely short along the sensor wire, so the temperature data was not usable.</p>
+<figure><img src="../assets/auv/auv-temperature.jpg" alt="Temperature readings railing out at about 28.05 °C." loading="lazy"><figcaption>Temperature readings railing out at about 28.05 °C.</figcaption></figure>
+<h3>The Magnetometer</h3>
+<p>It read well in air and in fresh water, but in salt water the readings spiked and then flatlined. The leading hypothesis is that electromagnetic interference was amplified underwater.</p>
+
+<h2>Testing the Method on Land</h2><hr>
+<p>To check that the approach itself works, magnets were scattered on the floor and the robot was carried over the area in a grid pattern. The resulting contour map shows a clear peak where a magnet sits, with baseline readings near 50.4 μT and peaks from about 85 μT up to 180 μT. It picked up one of the four magnets, so the method is feasible but needs better detection.</p>
+<div class="pair"><figure><img src="../assets/auv/auv-land-path.jpg" alt="Path of the robot for the land trial used to test the method." loading="lazy"><figcaption>Path of the robot for the land trial used to test the method.</figcaption></figure><figure><img src="../assets/auv/auv-contour.jpg" alt="Contour plot of magnetic flux density against position. White points mark where data was collected; the rest is interpolated." loading="lazy"><figcaption>Contour plot of magnetic flux density against position. White points mark where data was collected; the rest is interpolated.</figcaption></figure></div>
+
+<h2>What Comes Next</h2><hr>
 <ul>
 <li>Minimize electromagnetic interference and waterproof the sensors more carefully so no wires short.</li>
 <li>Use two magnetometers with sensor fusion for more reliable readings.</li>
 <li>Collect more points at a constant speed with more accurate GPS for better interpolation.</li>
 </ul>
-      </section>
-      <section class="psec"><h2 class="sec">My contributions</h2>
+
+<h2>My Contributions</h2><hr>
 <ul>
 <li>Designed and integrated multi-sensor circuitry for the AUV.</li>
 <li>Interfaced six sensor systems (GPS, IMU, pressure, temperature, motor current and magnetometer) with the microcontroller for onboard data acquisition.</li>
 <li>Wrote MATLAB code to analyze sensor data for water-current mapping and magnetic-object detection.</li>
 </ul>
-      </section>
-      <div class="dact"><a class="btn" href="../index.html#projects">Back to projects</a></div>
+      </div>
+      <div class="tags ptags"><span>Arduino</span><span>MATLAB</span><span>Sensors</span></div>
+      <div class="pshare"><span>Share</span><button type="button" class="btn" id="shCopy">Copy link</button><a class="btn" id="shLi" target="_blank" rel="noopener" href="#">LinkedIn</a><a class="btn" id="shMail" href="#">Email</a></div>
+    </article>
+    <section class="related">
+      <h2 class="sec">More projects</h2>
+      <div class="rgrid">
+<article class="rcard"><a class="rimg" href="pointview.html" tabindex="-1" aria-hidden="true"><img src="../assets/covers/pointview-cover.jpg" alt="" loading="lazy"></a><div class="date">Summer 2025</div><h3><a href="pointview.html">PointView</a></h3><div class="tags"><span>Computer Vision</span><span>YOLOv8</span><span>GridTrackNet</span><span>React</span></div><p>A website that automatically trims tennis match recordings, provides point statistics and lets players take notes.</p><a class="more" href="pointview.html">View more →</a></article>
+<article class="rcard"><a class="rimg" href="bci.html" tabindex="-1" aria-hidden="true">Cover image</a><div class="date">Aug 2026 – Present</div><h3><a href="bci.html">BCI Wireless Data Device</a></h3><div class="tags"><span>ESP32</span><span>Embedded Systems</span><span>Wireless</span></div><p>An industry-sponsored project with Blackrock Neurotech to deliver a wireless data transmission device for a brain-computer interface (BCI).</p><a class="more" href="bci.html">View more →</a></article>
+<article class="rcard"><a class="rimg" href="mobile-lectern.html" tabindex="-1" aria-hidden="true"><img src="../assets/covers/lectern-cover.jpg" alt="" loading="lazy"></a><div class="date">E4 team project</div><h3><a href="mobile-lectern.html">Mobile Lectern</a></h3><div class="tags"><span>Product Design</span><span>3D Printing</span></div><p>A foldable, 3D-printed lectern that sets up in about three seconds, built for a professor who wants to teach among his students.</p><a class="more" href="mobile-lectern.html">View more →</a></article>
+      </div>
+      <p><a class="more" href="../index.html#projects">All projects →</a></p>
     </section>
   </main>
   <footer class="wrap"><span>Rebecca Kong</span><a href="../index.html#about">Contact me</a></footer>
+<script>
+(function(){
+  var u=location.href,t=document.title,$=function(i){return document.getElementById(i)};
+  $("shLi").href="https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(u);
+  $("shMail").href="mailto:?subject="+encodeURIComponent(t)+"&body="+encodeURIComponent(u);
+  $("shCopy").onclick=function(){var b=this;
+    function ok(){b.textContent="Copied!";setTimeout(function(){b.textContent="Copy link"},1800)}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(ok,function(){prompt("Copy this link:",u)})}
+    else{prompt("Copy this link:",u)}};
+})();
+</script>
 </body>
 </html>

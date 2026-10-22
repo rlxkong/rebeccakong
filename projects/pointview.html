@@ -4,10 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PointView | Rebecca Kong</title>
+  <meta name="description" content="A website that automatically trims tennis match recordings, provides point statistics and lets players take notes.">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@500;700;800&family=Patrick+Hand&display=swap">
   <link rel="stylesheet" href="../styles.css">
 </head>
-<body>
+<body class="postpage">
   <header>
     <div class="wrap">
       <nav>
@@ -20,48 +21,76 @@
     </div>
   </header>
   <main class="wrap">
-    <section class="view on ppage">
-      <p><a class="more" href="../index.html#projects">← All projects</a></p>
-      <p class="date">Summer 2025</p>
+    <article class="article">
+      <p class="backlink"><a class="more" href="../index.html#projects">← All projects</a></p>
       <h1>PointView</h1>
-      <div class="tags"><span>Computer Vision</span><span>YOLOv8</span><span>GridTrackNet</span><span>React</span></div>
-      <p class="lead">A website that automatically trims tennis match recordings, provides point statistics and lets players take notes.</p>
-<figure class="pfig "><img src="../assets/pointview/pv-notes.jpg" alt="The PointView match page: video alongside editable notes." loading="lazy"><figcaption>The PointView match page: video alongside editable notes.</figcaption></figure>
+      <p class="byline">Rebecca Kong<span>·</span>Summer 2025<span>·</span>3 min read</p>
+      <figure class="pcover"><img src="../assets/covers/pointview-cover.jpg" alt="A tennis match frame with court keypoints labeled and a top-down minicourt in the corner."></figure>
+      <div class="pbody">
 <p>PointView makes tennis self-analysis faster and cheaper. It is a website that automatically trims match recordings down to the points actually played, gives point statistics, and lets players take notes next to their video. The project was built over the summer in the Entrepreneurship Studio Program at Harvey Mudd College with teammates Emily Ing and Bell Zhou, advised by Coach Caitlin Bernard and Professor Zach Dodds.</p>
 <p>Under the hood it combines a fine-tuned YOLOv8 model for players, GridTrackNet for the ball, an auto-trimming algorithm that decides when a point starts and ends, and a homography that maps what the camera sees onto a top-down “minicourt.”</p>
-      </section>
-      <section class="psec"><h2 class="sec">Website features</h2>
-<p>Users upload a match with a title, match type and notes, then browse their matches sorted by date, type and title. Each match page shows the video next to a rich-text notes editor.</p><div class="pgrid"><figure class="pfig "><img src="../assets/pointview/pv-upload.jpg" alt="Uploading a match with a note." loading="lazy"><figcaption>Uploading a match with a note.</figcaption></figure><figure class="pfig "><img src="../assets/pointview/pv-matches.jpg" alt="The list of uploaded matches, sortable by date, match type and title." loading="lazy"><figcaption>The list of uploaded matches, sortable by date, match type and title.</figcaption></figure></div>
-      </section>
-      <section class="psec"><h2 class="sec">Player and ball detection</h2>
-<p>Players are detected with a fine-tuned YOLOv8 model and given IDs, so only the people playing the current match are tracked and not line judges or ball kids. The ball is tracked with GridTrackNet.</p><figure class="pfig "><img src="../assets/pointview/pv-detection.jpg" alt="Detections on a match frame: the players and the ball are marked." loading="lazy"><figcaption>Detections on a match frame: the players and the ball are marked.</figcaption></figure><table class="ptable"><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th></tr>
+
+<h2>The Website</h2><hr>
+<p>Users upload a match with a title, match type and notes, then browse their matches sorted by date, type and title. Each match page shows the video next to a rich-text notes editor.</p>
+<figure><img src="../assets/pointview/pv-notes.jpg" alt="The PointView match page: video alongside editable notes." loading="lazy"><figcaption>The PointView match page: video alongside editable notes.</figcaption></figure>
+<div class="pair"><figure><img src="../assets/pointview/pv-upload.jpg" alt="Uploading a match with a note." loading="lazy"><figcaption>Uploading a match with a note.</figcaption></figure><figure><img src="../assets/pointview/pv-matches.jpg" alt="The list of uploaded matches, sortable by date, match type and title." loading="lazy"><figcaption>The list of uploaded matches, sortable by date, match type and title.</figcaption></figure></div>
+
+<h2>Player and Ball Detection</h2><hr>
+<h3>Players</h3>
+<p>Players are detected with a fine-tuned YOLOv8 model and given IDs, so only the people playing the current match are tracked and not line judges or ball kids.</p>
+<h3>The Ball</h3>
+<p>The ball is tracked with GridTrackNet.</p>
+<figure><img src="../assets/pointview/pv-detection.jpg" alt="Detections on a match frame: the players and the ball are marked." loading="lazy"><figcaption>Detections on a match frame: the players and the ball are marked.</figcaption></figure>
+<table class="ptable"><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th></tr>
 <tr><td>Ball (GridTrackNet)</td><td>0.913</td><td>0.966</td><td>0.939</td><td>0.953</td></tr>
 <tr><td>Players (YOLOv8)</td><td>0.996</td><td>0.992</td><td>1</td><td>0.996</td></tr></table>
-      </section>
-      <section class="psec"><h2 class="sec">Auto-trimming</h2>
+
+<h2>Auto-Trimming</h2><hr>
 <p>A rule-based algorithm watches the players’ positions, the serving position and the ball. A point starts when the players are in position and ends when the ball or players are missing for 50 consecutive frames, so downtime between points is cut. In one example a 2 minute 22 second recording of a game became 1 minute 12 seconds of play.</p>
-      </section>
-      <section class="psec"><h2 class="sec">Mapping to a birds-eye view</h2>
-<p>The user labels keypoints on the court in the video. Those are matched to preset points on a minicourt to compute a homography matrix, which is then applied to the player and ball detections to place them on the minicourt. The ball’s path is interpolated between bounces.</p><div class="pgrid"><figure class="pfig "><img src="../assets/pointview/pv-keypoints.jpg" alt="Court keypoints labeled on the video." loading="lazy"><figcaption>Court keypoints labeled on the video.</figcaption></figure><figure class="pfig "><img src="../assets/pointview/pv-minicourt.jpg" alt="Players and ball mapped onto the minicourt." loading="lazy"><figcaption>Players and ball mapped onto the minicourt.</figcaption></figure></div>
-      </section>
-      <section class="psec"><h2 class="sec">My contributions</h2>
+
+<h2>Mapping to a Birds-Eye View</h2><hr>
+<p>The user labels keypoints on the court in the video. Those are matched to preset points on a minicourt to compute a homography matrix, which is then applied to the player and ball detections to place them on the minicourt. The ball’s path is interpolated between bounces.</p>
+<div class="pair"><figure><img src="../assets/pointview/pv-keypoints.jpg" alt="Court keypoints labeled on the video." loading="lazy"><figcaption>Court keypoints labeled on the video.</figcaption></figure><figure><img src="../assets/pointview/pv-minicourt.jpg" alt="Players and ball mapped onto the minicourt." loading="lazy"><figcaption>Players and ball mapped onto the minicourt.</figcaption></figure></div>
+
+<h2>My Contributions</h2><hr>
 <ul>
 <li><b>Training:</b> trained the customized YOLOv8 object-detection model for tennis footage, covering manual data collection and labeling, dataset preparation, training and evaluation.</li>
 <li><b>Mapping:</b> implemented the keypoint-to-minicourt mapping that combines player detection, ball tracking and coordinate mapping to turn raw match footage into a birds-eye view.</li>
 </ul>
-<div class="plinks"><a class="btn p" href="https://github.com/rlxkong/Tennis-Mapping-PointView" target="_blank" rel="noopener">View the mapping code on GitHub ↗</a></div>
-      </section>
-      <section class="psec"><h2 class="sec">The entrepreneurship process</h2>
+<p><a class="btn p" href="https://github.com/rlxkong/Tennis-Mapping-PointView" target="_blank" rel="noopener">View the mapping code on GitHub ↗</a></p>
+
+<h2>The Entrepreneurship Process</h2><hr>
 <!-- Rebecca: replace or expand this section with your own story of building PointView. -->
 <p>The Entrepreneurship Studio Program treated the summer as a startup: build something real, then keep pitching it. Over the weeks the team pitched PointView to a series of visitors and mentors, including an intellectual-property attorney, and showed it at the campus-wide demo day. Along the way the team also explored a subscription model with tiered plans.</p>
 <p><em>More about how PointView was created and what I learned is coming soon.</em></p>
-      </section>
-      <section class="psec"><h2 class="sec">Conclusion and future work</h2>
+
+<h2>Conclusion and Future Work</h2><hr>
 <p>PointView runs reasonably accurately on high-quality footage. GridTrackNet’s ball detection depends on footage quality, which limits how well PointView can track the ball and generate stats from everyday recordings. Future work is a better algorithm for interpolating the ball path, or a higher baseline camera quality, while keeping PointView accessible.</p>
-      </section>
-      <div class="dact"><a class="btn" href="../index.html#projects">Back to projects</a></div>
+      </div>
+      <div class="tags ptags"><span>Computer Vision</span><span>YOLOv8</span><span>GridTrackNet</span><span>React</span></div>
+      <div class="pshare"><span>Share</span><button type="button" class="btn" id="shCopy">Copy link</button><a class="btn" id="shLi" target="_blank" rel="noopener" href="#">LinkedIn</a><a class="btn" id="shMail" href="#">Email</a></div>
+    </article>
+    <section class="related">
+      <h2 class="sec">More projects</h2>
+      <div class="rgrid">
+<article class="rcard"><a class="rimg" href="auv.html" tabindex="-1" aria-hidden="true"><img src="../assets/covers/auv-cover.jpg" alt="" loading="lazy"></a><div class="date">Aug 2025 – May 2026</div><h3><a href="auv.html">Autonomous Underwater Vehicle</a></h3><div class="tags"><span>Arduino</span><span>MATLAB</span><span>Sensors</span></div><p>An underwater robot that measures depth, temperature and magnetic flux to locate ferromagnetic objects on the ocean floor.</p><a class="more" href="auv.html">View more →</a></article>
+<article class="rcard"><a class="rimg" href="bci.html" tabindex="-1" aria-hidden="true">Cover image</a><div class="date">Aug 2026 – Present</div><h3><a href="bci.html">BCI Wireless Data Device</a></h3><div class="tags"><span>ESP32</span><span>Embedded Systems</span><span>Wireless</span></div><p>An industry-sponsored project with Blackrock Neurotech to deliver a wireless data transmission device for a brain-computer interface (BCI).</p><a class="more" href="bci.html">View more →</a></article>
+<article class="rcard"><a class="rimg" href="mobile-lectern.html" tabindex="-1" aria-hidden="true"><img src="../assets/covers/lectern-cover.jpg" alt="" loading="lazy"></a><div class="date">E4 team project</div><h3><a href="mobile-lectern.html">Mobile Lectern</a></h3><div class="tags"><span>Product Design</span><span>3D Printing</span></div><p>A foldable, 3D-printed lectern that sets up in about three seconds, built for a professor who wants to teach among his students.</p><a class="more" href="mobile-lectern.html">View more →</a></article>
+      </div>
+      <p><a class="more" href="../index.html#projects">All projects →</a></p>
     </section>
   </main>
   <footer class="wrap"><span>Rebecca Kong</span><a href="../index.html#about">Contact me</a></footer>
+<script>
+(function(){
+  var u=location.href,t=document.title,$=function(i){return document.getElementById(i)};
+  $("shLi").href="https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(u);
+  $("shMail").href="mailto:?subject="+encodeURIComponent(t)+"&body="+encodeURIComponent(u);
+  $("shCopy").onclick=function(){var b=this;
+    function ok(){b.textContent="Copied!";setTimeout(function(){b.textContent="Copy link"},1800)}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(ok,function(){prompt("Copy this link:",u)})}
+    else{prompt("Copy this link:",u)}};
+})();
+</script>
 </body>
 </html>
