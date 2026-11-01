@@ -1,4 +1,3 @@
-
 const KEY="portfolio-v1";
 const seed={
  profile:{name:"Your Name",title:"Your Role",bio:"A short intro about what you do and what you’re into. Click “Edit site” to make this yours.",
@@ -45,10 +44,11 @@ function render(){
 function updProg(){const c=$("exp"),m=c.scrollWidth-c.clientWidth;$("bar").style.transform="scaleX("+(m>0?c.scrollLeft/m:1)+")"}
 function nudge(d){const c=$("exp");waitUntil=performance.now()+2500;c.scrollBy({left:d*c.clientWidth*.8,behavior:"smooth"})}
 // auto-scroll: slow continuous drift, pauses on hover/touch/focus/edit mode, loops at the end
-let auto=!matchMedia("(prefers-reduced-motion:reduce)").matches,hover=false,touch=false,pos=0,last=0,waitUntil=0;
+// Experience cards no longer scroll by themselves: use the ← → arrows.
+let auto=false,hover=false,touch=false,pos=0,last=0,waitUntil=0;
 const pj=$("exp");
 function togglePlay(){auto=!auto;$("play").textContent=auto?"\u275a\u275a":"\u25b6";pj.classList.toggle("playing",auto)}
-pj.classList.toggle("playing",auto);$("play").textContent=auto?"\u275a\u275a":"\u25b6";
+pj.classList.toggle("playing",auto);
 pj.addEventListener("mouseenter",()=>hover=true);pj.addEventListener("mouseleave",()=>hover=false);
 pj.addEventListener("focusin",()=>hover=true);pj.addEventListener("focusout",()=>hover=false);
 pj.addEventListener("touchstart",()=>touch=true,{passive:true});pj.addEventListener("touchend",()=>setTimeout(()=>touch=false,2500));

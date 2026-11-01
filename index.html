@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Rebecca Kong – Portfolio</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display&family=Yellowtail&display=swap">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,13 +15,35 @@
 </nav></div></header>
 
 <main class="wrap" id="top">
-<div class="hero" id="home">
-<div><div class="eyebrow" id="title"></div><h1 id="name"></h1><p id="bio"></p><div class="links" id="links"></div>
-<div class="addrow"><button class="btn" onclick="editProfile()">Edit profile &amp; links</button></div></div>
-<div class="ph" id="photo"></div>
-</div>
+<!-- ===== Interactive room (drawn by room.js) ===== -->
+<div class="room" id="home">
 
-<section id="experience"><h2 class="sec">Experience</h2><div class="prog"><div class="track"><i id="bar"></i></div><button class="btn" id="play" onclick="togglePlay()" aria-label="Pause or play auto-scroll">❚❚</button><button class="btn" onclick="nudge(-1)" aria-label="Previous">←</button><button class="btn" onclick="nudge(1)" aria-label="Next">→</button></div>
+  <!-- Hidden visually, but kept for search engines and screen readers. app.js fills these in. -->
+  <div class="vh">
+    <div class="eyebrow" id="title"></div>
+    <h1 id="name"></h1>
+    <p id="bio"></p>
+    <div id="photo"></div>
+    <div class="addrow"><button class="btn" onclick="editProfile()">Edit profile &amp; links</button></div>
+  </div>
+
+  <canvas id="roomCv" tabindex="0" aria-label="Rebecca's room. The bookshelf holds her projects, the computer goes to her experience and the name sign opens About."></canvas>
+
+  <!-- Bar along the bottom of the room -->
+  <div class="hud">
+    <div class="links" id="links"></div>
+    <div class="seg" id="tod" role="group" aria-label="Lights">
+      <button data-m="now" class="on">Auto</button>
+      <button data-m="day">Day</button>
+      <button data-m="dusk">Sunset</button>
+      <button data-m="night">Night</button>
+    </div>
+  </div>
+
+</div>
+<!-- ===== end of room ===== -->
+
+<section id="experience"><h2 class="sec">Experience</h2><div class="prog"><div class="track"><i id="bar"></i></div><button class="btn" onclick="nudge(-1)" aria-label="Previous">←</button><button class="btn" onclick="nudge(1)" aria-label="Next">→</button></div>
 <div id="exp"></div>
 <p class="seeall"><a class="more" href="#resume">Open resume →</a></p>
 <div class="addrow"><button class="btn p" onclick="editExp()">+ Add experience</button></div></section>
@@ -46,5 +68,6 @@
 <dialog id="dlg"><form method="dialog" id="frm"></form></dialog>
 
 <script src="app.js"></script>
+<script src="room.js"></script>
 </body>
 </html>

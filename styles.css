@@ -1,4 +1,3 @@
-
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 --bg:#fafaf8;--surface:#fff;--text:#15171a;--muted:#6b7077;--line:#e6e6e1;--accent:#2f6fed;--chip:#eef1f6}
 html{scroll-padding-top:calc(70px + env(safe-area-inset-top,0px));scroll-behavior:smooth}
@@ -404,3 +403,429 @@ main.wrap{padding-bottom:0}
 #resume .dl .btn:hover{background:var(--ink);border-color:var(--ink)}
 #resume h2.sec{text-align:left}
 .about{background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important}
+
+
+/* ==========================================================================
+   ROOM HERO
+   The interactive room at the top of the home page (drawn by room.js).
+   ========================================================================== */
+
+.room {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);   /* stretch edge to edge */
+  height: clamp(440px, calc(100svh - 63px - env(safe-area-inset-top, 0px)), 940px);
+  overflow: hidden;
+  background: #f6e2e7;
+}
+.room.view.on {
+  display: block;
+  animation: none;
+}
+.room canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: manipulation;
+}
+.room canvas:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+}
+
+/* Name, bio and photo stay in the page for search engines and screen readers, but are hidden visually */
+.room .vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Bar along the bottom of the room: social icons on the left, Lights switch on the right */
+.room .hud {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 max(16px, env(safe-area-inset-right, 0px)) 16px max(16px, env(safe-area-inset-left, 0px));
+  pointer-events: none;
+}
+.room .hud > * {
+  pointer-events: auto;
+}
+.room .links {
+  margin: 0;
+  gap: 8px;
+}
+.room .links .btn.ico {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 250, 248, .9) !important;
+  border: 0 !important;
+  color: #2a2226 !important;
+}
+.room .links .btn.ico:hover {
+  background: #fff !important;
+  color: var(--accent) !important;
+}
+.room .seg {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 3px;
+  background: rgba(255, 250, 248, .9);
+}
+.room .seg button {
+  border: 0;
+  background: none;
+  color: #6d5c63;
+  padding: 6px 11px;
+  border-radius: 999px;
+  font: 500 13px "Inter", system-ui, sans-serif;
+}
+.room .seg button.on {
+  background: #fbe4eb;
+  color: #a8405f;
+}
+
+/* On phones the room keeps its shape instead of filling the screen */
+@media (max-width: 640px) {
+  .room {
+    height: auto;
+    aspect-ratio: 10 / 7.4;
+  }
+}
+
+/* Outline used to highlight a project card */
+.proj.flash {
+  outline: 3px solid var(--accent);
+  outline-offset: 6px;
+}
+
+
+/* ==========================================================================
+   COZY THEME
+   Matches the room: warm paper background, pastel pink accents, serif
+   headings and book-spine colors. Delete this whole section to go back
+   to the black and purple look.
+   ========================================================================== */
+
+/* --- Colors --- */
+:root,
+:root:not([data-theme="light"]),
+header,
+.hero,
+footer {
+  --bg: #fbf6f2;
+  --surface: #fffdfb;
+  --pol: #fffdfb;
+  --text: #2e2529;
+  --muted: #76666c;
+  --line: #efe1e4;
+  --edge: #e6cdd4;
+  --accent: #e58aa4;     /* pastel pink */
+  --ink: #b14d6c;        /* deeper pink for text and links */
+  --chip: #fbe4eb;
+  --n1: #fdf0f3;
+  --n2: #f4effb;
+  --n3: #eef7f2;
+  --sh: 0 1px 2px rgba(120, 60, 80, .05), 0 10px 28px -12px rgba(150, 70, 100, .22);
+  /* the same colors as the books on the shelf */
+  --book1: #9fd3f0;
+  --book2: #f4a6c0;
+  --book3: #c9b6f2;
+  --book4: #a8e0c8;
+  --book5: #f6d98a;
+}
+body {
+  background: var(--bg) !important;
+  color: var(--text);
+}
+body::before {
+  background: var(--bg);
+}
+::selection {
+  background: #f8c9d6;
+  color: var(--text);
+}
+
+/* --- Headings: same serif as the book spines --- */
+h2.sec,
+.proj h3,
+.card h3,
+.rcard h3,
+.pbody h2,
+.article h1,
+.ppage h1,
+.rh h3,
+#dBody h2.sec {
+  font-family: "DM Serif Display", Georgia, "Times New Roman", serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+}
+.proj h3 a,
+.rcard h3 a,
+.card h3 a {
+  font-family: inherit !important;
+  font-weight: inherit !important;
+}
+h2.sec {
+  font-size: clamp(30px, 3.6vw, 40px) !important;
+  color: var(--text) !important;
+  margin-bottom: 24px;
+}
+h2.sec::after {
+  width: 44px !important;
+  height: 4px !important;
+  border-radius: 4px !important;
+  background: var(--accent) !important;
+  margin-top: 8px;
+}
+
+/* --- Header --- */
+header {
+  background: rgba(251, 246, 242, .92) !important;
+  border-bottom: 1px solid var(--line) !important;
+  color: var(--text);
+}
+.logo {
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: 0;
+  font: 400 22px "DM Serif Display", Georgia, serif !important;
+}
+.logo i {
+  background: var(--accent) !important;
+  color: #2e2529 !important;
+  border-radius: 9px !important;
+  font: 700 13px "Inter", sans-serif !important;
+}
+nav a.l {
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: var(--muted) !important;
+}
+nav a.l:hover,
+nav a.l.on {
+  color: var(--ink) !important;
+}
+nav a.l.on::after {
+  background: var(--accent) !important;
+  height: 3px !important;
+  bottom: -6px !important;
+  border-radius: 3px !important;
+}
+
+/* --- Buttons, filter chips and tags --- */
+.btn {
+  border-radius: 999px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--edge) !important;
+}
+.btn:hover {
+  background: var(--chip) !important;
+  border-color: var(--accent) !important;
+  color: var(--ink) !important;
+}
+.btn.p,
+#resume .dl .btn {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #2e2529 !important;
+}
+.btn.p:hover,
+#resume .dl .btn:hover {
+  background: #ee9fb5 !important;
+  color: #2e2529 !important;
+}
+.chip {
+  border-radius: 999px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  background: var(--surface) !important;
+  color: var(--muted) !important;
+  border: 1px solid var(--edge) !important;
+}
+.chip:hover {
+  color: var(--ink) !important;
+  border-color: var(--accent) !important;
+}
+.chip.on,
+.chip[aria-pressed="true"] {
+  background: var(--accent) !important;
+  color: #2e2529 !important;
+  border-color: var(--accent) !important;
+}
+/* tags cycle through pastel colors */
+.tags span {
+  border-radius: 999px !important;
+  color: #3a2a33 !important;
+  font-weight: 500 !important;
+  background: #cfe9f7 !important;
+}
+.tags span:nth-child(5n+2) { background: #fbd3df !important; }
+.tags span:nth-child(5n+3) { background: #e3d9f8 !important; }
+.tags span:nth-child(5n+4) { background: #d3f0e2 !important; }
+.tags span:nth-child(5n)   { background: #fbebbd !important; }
+.more,
+.back {
+  color: var(--ink) !important;
+}
+
+/* --- Cards: soft paper; experience cards get a colored top edge like a book spine --- */
+.card,
+.proj,
+.rcard,
+.sheet,
+.pfig,
+.dcv,
+.pfacts div {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 18px !important;
+  box-shadow: var(--sh) !important;
+}
+.card {
+  border-top: 6px solid var(--book2) !important;
+}
+.card:nth-child(5n+2) { border-top-color: var(--book1) !important; }
+.card:nth-child(5n+3) { border-top-color: var(--book3) !important; }
+.card:nth-child(5n+4) { border-top-color: var(--book4) !important; }
+.card:nth-child(5n)   { border-top-color: var(--book5) !important; }
+.card .co {
+  color: var(--ink) !important;
+}
+.proj:hover,
+.rcard:hover,
+.card:hover {
+  border-color: var(--edge) !important;
+  box-shadow: 0 2px 4px rgba(120, 60, 80, .06), 0 18px 40px -14px rgba(150, 70, 100, .32) !important;
+  transform: translateY(-4px) !important;
+}
+.proj .cv,
+.cv,
+.rimg,
+.proj img,
+.rcard .rimg,
+.pcover img,
+.pbody img,
+.pbody figure img,
+.dcv img,
+.pfig img {
+  border-radius: 12px !important;
+}
+.cv,
+.proj .empty,
+.pimg {
+  background: var(--n1) !important;
+  border-color: var(--line) !important;
+}
+.proj h3 {
+  font-size: clamp(24px, 2.6vw, 30px) !important;
+  line-height: 1.15 !important;
+}
+.proj h3 a,
+.card h3 a,
+.rcard h3 a {
+  color: var(--text) !important;
+}
+.proj h3 a:hover,
+.rcard h3 a:hover {
+  color: var(--ink) !important;
+}
+.card h3 {
+  font-size: 24px !important;
+}
+.proj.flash {
+  outline-color: var(--accent);
+}
+
+/* --- Experience progress bar --- */
+.prog .track {
+  background: var(--line) !important;
+  height: 4px !important;
+  border-radius: 4px;
+}
+.prog .track i {
+  background: var(--accent) !important;
+  border-radius: 4px;
+}
+.prog .btn {
+  background: var(--surface) !important;
+}
+
+/* --- Resume, About, contact form and project pages --- */
+#resume .rpdf img {
+  border-radius: 14px !important;
+  box-shadow: var(--sh) !important;
+  border: 1px solid var(--line) !important;
+}
+#resume .dl {
+  border-bottom-color: var(--line) !important;
+}
+.about p {
+  color: var(--text) !important;
+  font-size: 17px;
+}
+input,
+textarea,
+select {
+  background: var(--surface) !important;
+  border: 1px solid var(--edge) !important;
+  border-radius: 12px !important;
+  color: var(--text) !important;
+}
+input:focus,
+textarea:focus {
+  outline: 2px solid var(--accent) !important;
+}
+.empty {
+  background: var(--n1) !important;
+  border: 1px dashed var(--edge) !important;
+  border-radius: 14px !important;
+}
+.pbody p,
+.pbody li {
+  color: var(--text) !important;
+}
+.pbody h3 {
+  color: var(--ink) !important;
+}
+.pbody hr,
+.pshare,
+.rrow {
+  border-color: var(--line) !important;
+}
+dialog {
+  border-radius: 20px !important;
+  border: 1px solid var(--line) !important;
+  background: var(--surface) !important;
+  color: var(--text) !important;
+}
+
+/* --- Footer: the color of the room's wooden floor --- */
+footer {
+  background: #e7c9a9 !important;
+  color: #5a3f2e !important;
+  border-top: 0 !important;
+  box-shadow: 0 0 0 100vmax #e7c9a9 !important;   /* stretches the color edge to edge */
+}
+footer a,
+#copy {
+  color: #5a3f2e !important;
+}
